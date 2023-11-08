@@ -7,10 +7,10 @@
     "database": "heroku_91b2a9e1466beee"
   },
   "database": {
-    "host": "localhost",
+    "host": "61.28.230.65",
     "port": 3306,
-    "user": "root",
-    "password": "Dung2001",
+    "user": "npvdung",
+    "password": "112023",
     "database": "english-app-db"
   },
   "development": {
