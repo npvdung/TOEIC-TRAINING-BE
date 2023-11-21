@@ -10,6 +10,8 @@ module.exports = {
   create,
   update,
   delete: _delete,
+  getByEmail,
+  getUserWithHash,
   updateRoleAndIsActivated,
 };
 
@@ -30,6 +32,26 @@ async function getAll() {
 
 async function getById(id) {
   return await getUser(id);
+}
+
+async function getByEmail(email) {
+  const user = await db.User.findOne({ where: { email } });
+  if (!user) throw "User not found";
+  return user;
+}
+
+async function getUserWithHash(id) {
+  try {
+    const user = await db.User.scope("withHash").findOne({ where: { id } });
+
+    if (!user) {
+      return null;
+    }
+    return user;
+  } catch (error) {
+    console.error("Error getting user:", error);
+    throw error;
+  }
 }
 
 async function create(params) {
