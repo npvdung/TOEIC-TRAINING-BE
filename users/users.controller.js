@@ -168,6 +168,9 @@ async function forgetPassword(req, res) {
   const { email } = req.body;
   try {
     const user = await userService.getByEmail(email);
+    if (!user) {
+      return res.json({ status: "User Not Exists!!" });
+    }
     const secret = JWT_SECRET + user.password;
     const token = jwt.sign({ email: user.email, id: user.id }, secret, {
       expiresIn: "5m",
