@@ -6,18 +6,19 @@ const errorHandler = require("./_middleware/error-handler");
 const morgan = require("morgan");
 const http = require("http");
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(function (req, res, next) {
-    console.log(JSON.stringify(req.headers));
-    next();
+  console.log(JSON.stringify(req.headers));
+  next();
 });
 app.use(
-    cors({
-        origin: "*",
-    })
+  cors({
+    origin: "*",
+  })
 );
 app.use(morgan("combined"));
+app.set("view engine", "ejs");
 // api routes
 app.use("/users", require("./users/users.controller"));
 app.use("/questions", require("./questions/question.controller"));

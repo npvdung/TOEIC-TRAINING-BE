@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
+    "start": "nodemon index",
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon index"
   },
@@ -14,18 +14,20 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "ejs": "^3.1.9",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
-    "nodemon": "^2.0.20",
+    "nodemailer": "^6.9.7",
     "rootpath": "^0.1.2",
     "sequelize": "^6.6.4",
     "webpack": "^5.76.3"
   },
   "devDependencies": {
+    "nodemon": "^3.0.1",
     "webpack-cli": "^5.0.1"
   }
 }

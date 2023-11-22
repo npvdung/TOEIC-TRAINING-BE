@@ -3,7 +3,10 @@ const router = express.Router();
 const Joi = require("joi");
 const validateRequest = require("../_middleware/validate-request");
 const authorize = require("../_middleware/authorize");
+const jwt = require("jsonwebtoken");
 const userService = require("./user.service");
+const bcrypt = require("bcryptjs");
+var nodemailer = require("nodemailer");
 
 // routes
 router.post("/authenticate", authenticateSchema, authenticate);
@@ -19,8 +22,15 @@ router.put(
 );
 router.put("/:id", authorize(), updateSchema, update);
 router.delete("/:id", authorize(), _delete);
+router.post("/forget-password", forgetPassword);
+router.get("/reset-password/:id/:token", renderResetPassword);
+router.post("/reset-password/:id/:token", resetPassword);
+router.post("/change-password/:id", changePassword);
 
 module.exports = router;
+
+const JWT_SECRET =
+  "hvdvay6ert72839289()aiyg8t87qt72393293883uhefiuh78ttq3ifi78272jbkj?[]]pou89ywe";
 
 function authenticateSchema(req, res, next) {
   const schema = Joi.object({
@@ -152,4 +162,112 @@ function updateRoleAndIsActivated(req, res, next) {
       })
     )
     .catch(next);
+}
+
+async function forgetPassword(req, res) {
+  const { email } = req.body;
+  try {
+    const user = await userService.getByEmail(email);
+    if (!user) {
+      return res.json({ status: "User Not Exists!!" });
+    }
+    const secret = JWT_SECRET + user.password;
+    const token = jwt.sign({ email: user.email, id: user.id }, secret, {
+      expiresIn: "5m",
+    });
+    const link = `http://localhost:8888/users/reset-password/${user.id}/${token}`;
+
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "toeictraining1@gmail.com",
+        pass: "uxgvuklnlknilvny",
+      },
+    });
+
+    var mailOptions = {
+      from: "youremail@gmail.com",
+      to: email,
+      subject: "Password Reset",
+      text: link,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+
+    res.send("Email sent successfully");
+  } catch (error) {
+    res.json({ error });
+  }
+}
+
+async function renderResetPassword(req, res) {
+  const { id, token } = req.params;
+  const user = await userService.getById(id);
+  if (!user) {
+    return res.json({ status: "User Not Exists!!" });
+  }
+  const secret = JWT_SECRET + user.password;
+  try {
+    const verify = jwt.verify(token, secret);
+
+    res.render("index", { email: verify.email, status: "Not Verified" });
+  } catch (error) {
+    res.send("Not Verified");
+  }
+}
+
+async function resetPassword(req, res) {
+  const { id, token } = req.params;
+  const { password } = req.body;
+  const user = await userService.getById(id);
+
+  if (!user) {
+    return res.json({ status: "User Not Exists!!" });
+  }
+
+  const secret = JWT_SECRET + user.password;
+
+  try {
+    const verify = jwt.verify(token, secret);
+
+    await userService.update(id, { password: password });
+    res.render("index", { email: verify.email, status: "verified" });
+  } catch (error) {
+    res.send(error);
+  }
+}
+
+async function changePassword(req, res) {
+  const { id } = req.params;
+  const { oldPassword, newPassword } = req.body;
+
+  try {
+    const user = await userService.getUserWithHash(id);
+
+    if (!user) {
+      return res.status(404).json({ status: "User not found" });
+    }
+
+    const isPasswordMatch = await bcrypt.compare(oldPassword, user.hash);
+
+    if (!isPasswordMatch) {
+      return res.status(401).json({ status: "Incorrect old password" });
+    }
+
+    const updatedUser = await userService.update(id, { password: newPassword });
+
+    if (updatedUser) {
+      return res.json({ status: "Password updated successfully" });
+    } else {
+      return res.json({ status: "Failed to update password" });
+    }
+  } catch (error) {
+    return res.status(500).json({ status: "Internal server error" });
+  }
 }
