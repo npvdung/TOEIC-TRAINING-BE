@@ -169,7 +169,7 @@ async function forgetPassword(req, res) {
   try {
     const user = await userService.getByEmail(email);
     if (!user) {
-      return res.json({ status: "User Not Exists!!" });
+      return res.status(404).json({ status: "User not found" });
     }
     const secret = JWT_SECRET + user.password;
     const token = jwt.sign({ email: user.email, id: user.id }, secret, {
@@ -202,7 +202,7 @@ async function forgetPassword(req, res) {
 
     res.send("Email sent successfully");
   } catch (error) {
-    res.json({ error });
+    return res.status(500).json({ status: "Internal server error" });
   }
 }
 
@@ -210,7 +210,7 @@ async function renderResetPassword(req, res) {
   const { id, token } = req.params;
   const user = await userService.getById(id);
   if (!user) {
-    return res.json({ status: "User Not Exists!!" });
+    return res.status(404).json({ status: "User not found" });
   }
   const secret = JWT_SECRET + user.password;
   try {
@@ -228,7 +228,7 @@ async function resetPassword(req, res) {
   const user = await userService.getById(id);
 
   if (!user) {
-    return res.json({ status: "User Not Exists!!" });
+    return res.status(404).json({ status: "User not found" });
   }
 
   const secret = JWT_SECRET + user.password;
@@ -239,7 +239,7 @@ async function resetPassword(req, res) {
     await userService.update(id, { password: password });
     res.render("index", { email: verify.email, status: "verified" });
   } catch (error) {
-    res.send(error);
+    return res.status(500).json({ status: "Internal server error" });
   }
 }
 
@@ -265,7 +265,7 @@ async function changePassword(req, res) {
     if (updatedUser) {
       return res.json({ status: "Password updated successfully" });
     } else {
-      return res.json({ status: "Failed to update password" });
+      return res.status(401).json({ status: "Failed to update password" });
     }
   } catch (error) {
     return res.status(500).json({ status: "Internal server error" });
