@@ -1,10 +1,10 @@
-const { DataTypes } = require('sequelize')
+const { DataTypes } = require("sequelize");
 
-module.exports = model
+module.exports = model;
 
 function model(sequelize) {
   const attributes = {
-    // questionName: { type: DataTypes.STRING, allowNull: false },
+    questionName: { type: DataTypes.STRING, allowNull: true },
     questionType: { type: DataTypes.NUMBER, allowNull: false },
     questionTitle: { type: DataTypes.STRING, allowNull: true },
     questionContent: { type: DataTypes.STRING, allowNull: true },
@@ -16,7 +16,7 @@ function model(sequelize) {
     readingId: { type: DataTypes.NUMBER, allowNull: true },
     explanation: { type: DataTypes.STRING, allowNull: true },
     createdBy: { type: DataTypes.NUMBER, allowNull: false },
-  }
+  };
 
-  return sequelize.define('question', attributes)
+  return sequelize.define("question", attributes);
 }

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reset password</title>
+    <script>
+      function validateForm() {
+        var password = document.getElementById("password");
+        var confirm = document.getElementById("confirm");
+        var passwordError = document.getElementById("passwordError");
+        var confirmError = document.getElementById("confirmError");
+        var submitButton = document.querySelector(".btnSubmit");
+
+        var isValid = true;
+
+        if (!password.value) {
+          passwordError.textContent = "Please input password";
+          isValid = false;
+        } else {
+          passwordError.textContent = "";
+        }
+
+        if (password.value !== confirm.value) {
+          confirmError.textContent =
+            "Password different with confirm password. Please try again";
+          isValid = false;
+        } else {
+          confirmError.textContent = "";
+        }
+        submitButton.disabled = !isValid;
+      }
+      var status = "<%- status %>";
+      if (status == "verified") {
+        window.location.href = "http://localhost:3000/login";
+      }
+    </script>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50vh;
+        margin: 0;
+        padding-bottom: 35vh;
+        background-color: #f2e9e9;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        border: none;
+        border-radius: 4px;
+        padding: 20px;
+        background-color: #fff;
+      }
+
+      .line {
+        display: flex;
+        flex-direction: row;
+      }
+
+      label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+
+      .inputPass {
+        height: 30px;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        width: 162px;
+      }
+
+      .inputPass:focus,
+      .inputPass:active,
+      .inputPass:hover {
+        border-color: #40a9ff;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+      }
+
+      .inputPass::placeholder {
+        opacity: 0.5;
+        font-weight: normal;
+      }
+
+      .btnSubmit {
+        height: 30px;
+        padding: 0 10px;
+        background-color: #1890ff;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+        align-self: flex-end;
+        border: none;
+      }
+
+      .btnSubmit:disabled {
+        background-color: rgb(173, 161, 161);
+        cursor: not-allowed;
+      }
+
+      label {
+        width: 148px;
+      }
+
+      .error {
+        color: red;
+        font-size: 12px;
+        align-self: flex-end;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="" method="post">
+      <p>Reset password for email <%= email%></p>
+      <div class="line">
+        <label> Input new password</label>
+        <input
+          class="inputPass"
+          type="password"
+          name="password"
+          id="password"
+          placeholder="password"
+          oninput="validateForm()"
+          required
+        />
+      </div>
+      <div id="passwordError" class="error"></div>
+      <div class="line">
+        <label> Confirm password</label>
+        <input
+          class="inputPass"
+          type="password"
+          name="confirm-password"
+          id="confirm"
+          placeholder="confirm-password"
+          oninput="validateForm()"
+          required
+        />
+      </div>
+      <div id="confirmError" class="error"></div>
+      <button class="btnSubmit" type="submit" value="Submit" disabled="true">
+        Submit
+      </button>
+    </form>
+  </body>
+</html>
