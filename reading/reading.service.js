@@ -8,14 +8,8 @@ module.exports = {
   getAll,
 };
 
-async function create(params) {
-  db.Reading.create(params)
-    .then((reading) => {
-      for (let question of params.questionList) {
-        db.Question.create({ ...question, readingId: reading.id });
-      }
-    })
-    .catch((err) => {});
+function create(params) {
+  return db.Reading.create(params)
 }
 
 async function update(params) {

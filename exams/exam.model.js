@@ -10,6 +10,7 @@ function model(sequelize) {
     totalTime: { type: DataTypes.NUMBER, allowNull: false },
     categoryId: { type: DataTypes.NUMBER, allowNull: false },
     listQuestion: { type: DataTypes.STRING, allowNull: true },
+    groupId: { type: DataTypes.NUMBER, allowNull: true }
   };
 
   return sequelize.define("exam", attributes);

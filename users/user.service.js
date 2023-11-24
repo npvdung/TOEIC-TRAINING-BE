@@ -2,6 +2,7 @@ const config = require("../config.json");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../_helpers/db");
+const {QueryTypes} = require("sequelize");
 
 module.exports = {
   authenticate,
@@ -11,6 +12,7 @@ module.exports = {
   update,
   delete: _delete,
   updateRoleAndIsActivated,
+  getAllByUserId: getAllByUserId
 };
 
 async function authenticate({ username, password }) {
@@ -102,4 +104,14 @@ async function updateRoleAndIsActivated(body) {
       },
     }
   );
+}
+
+async function getAllByUserId(userId) {
+  return db.sequelize?.query("SELECT g.* FROM `groupUser` gu LEFT JOIN `groups` g ON gu.groupId = g.id WHERE gu.userId = :userId",
+      {
+        replacements: {
+          userId: userId
+        },
+        type: QueryTypes.SELECT
+      });
 }

@@ -26,6 +26,8 @@ app.use("/exams", require("./exams/exam.controller"));
 app.use("/results", require("./results/result.controller"));
 app.use("/games", require("./games/games.controller"));
 app.use("/reading", require("./reading/reading.controller"));
+app.use("/groups", require("./groups/groups.controller"));
+
 app.disable("etag");
 // process.on('uncaughtException', function (err) {
 //

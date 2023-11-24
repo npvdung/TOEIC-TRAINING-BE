@@ -1,4 +1,5 @@
 const db = require('../_helpers/db');
+const {QueryTypes} = require("sequelize");
 
 module.exports = {
     getAll: getAll,
@@ -14,8 +15,17 @@ async function getAllByParams(params) {
     return await db.Exam?.findAll(params)
 }
 
-async function getAll() {
-    return await db.Exam?.findAll();
+async function getAll(groupId) {
+    return await db.sequelize.query("SELECT * FROM exams " +
+        "WHERE CASE " +
+        "WHEN :groupId IS NULL THEN groupId IS NULL " +
+        "WHEN :groupId IS NOT NULL then groupId = :groupId END",
+        {
+            replacements: {
+                groupId: groupId
+            },
+            type: QueryTypes.SELECT
+        });
 }
 
 async function getById(id) {

@@ -4,6 +4,7 @@ const Joi = require("joi");
 const validateRequest = require("../_middleware/validate-request");
 const authorize = require("../_middleware/authorize");
 const userService = require("./user.service");
+const groupService = require("../groups/groups.service");
 
 // routes
 router.post("/authenticate", authenticateSchema, authenticate);
@@ -11,6 +12,8 @@ router.post("/register", registerSchema, register);
 router.get("/", authorize(), getAll);
 router.get("/current", authorize(), getCurrent);
 router.get("/:id", authorize(), getById);
+router.get('/:userId/groups', authorize(), getAllGroupByUserId)
+
 router.put(
   "/role-activate",
   authorize(),
@@ -152,4 +155,17 @@ function updateRoleAndIsActivated(req, res, next) {
       })
     )
     .catch(next);
+}
+
+function getAllGroupByUserId(req, res, next) {
+    userService
+        .getAllByUserId(req.params.userId)
+        .then((data) =>
+            res.json({
+                code: 200,
+                message: 'Created successfully',
+                data: data
+            })
+        )
+        .catch(next)
 }

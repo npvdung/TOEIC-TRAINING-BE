@@ -30,6 +30,9 @@ async function initialize() {
       evict: 50000,
       acquire: 50000,
     },
+    dialectOptions: {
+      multipleStatements: true
+    }
   })
 
   // init models and add them to the exported db object
@@ -39,6 +42,7 @@ async function initialize() {
   db.Exam = require('../exams/exam.model')(sequelize)
   db.Result = require('../results/result.model')(sequelize)
   db.Reading = require('../reading/reading.model')(sequelize)
+  db.Group = require('../groups/groups.model')(sequelize)
   db.sequelize = sequelize;
   // connection.release();
   // sync all models with database

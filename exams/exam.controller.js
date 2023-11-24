@@ -5,9 +5,10 @@ const validateRequest = require("../_middleware/validate-request");
 const authorize = require("../_middleware/authorize");
 const examService = require("./exam.service");
 const questionService = require("../questions/question.service");
+const groupService = require("../groups/groups.service");
 
 // routes
-router.post("/", authorize(), createQuestionSchema, createExam);
+router.post("/", authorize(), createExamSchema, createExam);
 router.get("/", authorize(), getAll);
 router.get("/:id", authorize(), getById);
 router.get("/getListExamByCategory/:categoryId", authorize(), getListExamByCategory);
@@ -16,9 +17,11 @@ router.delete("/:id", authorize(), _delete);
 router.post("/getQuestionsByExam", authorize(), getQuestionsByExam);
 router.post("/getExamByUser", authorize(), getExamByUser);
 router.post("/generate-random-exam", authorize(), generateRandomExamSchema, generateRandomExam);
+
+
 module.exports = router;
 
-function createQuestionSchema(req, res, next) {
+function createExamSchema(req, res, next) {
     const schema = Joi.object({
         examName: Joi.string().required(),
         totalPoint: Joi.number().required(),
@@ -26,6 +29,7 @@ function createQuestionSchema(req, res, next) {
         totalTime: Joi.number().required(),
         categoryId: Joi.number().required(),
         listQuestion: Joi.string().required(),
+        groupId: Joi.number()
     });
     validateRequest(req, next, schema);
 }
@@ -44,8 +48,14 @@ function createExam(req, res, next) {
 }
 
 function getAll(req, res, next) {
+    let groupId;
+    if (req.query.groupId) {
+        groupId = req.query.groupId;
+    } else {
+        groupId = null;
+    }
     examService
-        .getAll()
+        .getAll(groupId)
         .then((exams) =>
             res.json({
                 code: 200,
@@ -173,3 +183,4 @@ function generateRandomExam(req, res, next) {
         )
         .catch(next);
 }
+
