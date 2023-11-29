@@ -10,11 +10,17 @@ module.exports = {
     deleteGroup: deleteGroup
 };
 
-function create(params) {
+async function create(params) {
     const CODE_LENGTH = 7;
     const code = generateCode(CODE_LENGTH);
     params.code = code;
-    return db.Group?.create(params);
+    return await db.Group?.create(params).then(group => {
+        join({
+            groupId: group.id,
+            userId: params.ownerId
+        });
+    });
+
 }
 
 function generateCode(length) {
