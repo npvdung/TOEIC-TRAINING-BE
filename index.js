@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 const errorHandler = require("./_middleware/error-handler");
 const morgan = require("morgan");
 const http = require("http");
-
+const path = require('path');
+global.appRoot = path.resolve(__dirname);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(function (req, res, next) {

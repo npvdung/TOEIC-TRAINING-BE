@@ -1,9 +1,10 @@
+
 const config = require("../config.json");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../_helpers/db");
 const {QueryTypes} = require("sequelize");
-
+const fs = require("fs");
 module.exports = {
   authenticate,
   getAll,
@@ -14,7 +15,8 @@ module.exports = {
   getByEmail,
   getUserWithHash,
   updateRoleAndIsActivated,
-  getAllByUserId: getAllByUserId
+  getAllByUserId: getAllByUserId,
+  updateAvatar: updateAvatar
 };
 
 async function authenticate({ username, password }) {
@@ -67,6 +69,7 @@ async function create(params) {
     params.hash = await bcrypt.hash(params.password, 10);
   }
 
+  // const fileData = await fs.readFileSync()
   // save user
   await db.User.create({ ...params, role: 1 });
 }
@@ -136,4 +139,17 @@ async function getAllByUserId(userId) {
         },
         type: QueryTypes.SELECT
       });
+}
+
+async function updateAvatar(avatarPath, userId) {
+  db.User.update(
+      {
+        avatar: avatarPath
+      },
+      {
+        where: {
+          id: userId,
+        },
+      }
+  );
 }

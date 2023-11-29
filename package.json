@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "app-root-path": "^3.1.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -20,6 +21,7 @@
     "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "mysql2": "^2.3.3",
     "nodemailer": "^6.9.7",
     "rootpath": "^0.1.2",
