@@ -10,6 +10,7 @@ router.post('/', authorize(), createGroupSchema, createGroupQuestion)
 router.post('/join', authorize(), joinGroupSchema, joinGroup)
 router.get('/:groupId/users', authorize(), getAllUserByGroupId)
 router.delete('/:groupId', authorize(), deleteGroup)
+router.delete('/:groupId/users/:userId', authorize(), removeUserFromGroup)
 
 module.exports = router;
 function createGroupSchema(req, res, next) {
@@ -98,3 +99,16 @@ async function deleteGroup(req, res, next) {
         )
         .catch(next)
 }
+
+async function removeUserFromGroup(req, res, next) {
+    groupService
+        .removeUserFromGroup(req.params.groupId, req.params.userId)
+        .then((data) =>
+            res.json({
+                code: 204,
+                message: 'Created successfully'
+            })
+        )
+        .catch(next)
+}
+
