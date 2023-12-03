@@ -7,7 +7,8 @@ module.exports = {
     join: join,
     existsInGroup: existsInGroup,
     getAllUserByGroupId: getAllUserByGroupId,
-    deleteGroup: deleteGroup
+    deleteGroup: deleteGroup,
+    removeUserFromGroup: removeUserFromGroup
 };
 
 async function create(params) {
@@ -80,3 +81,14 @@ async function deleteGroup(groupId) {
             }
         });
 }
+
+async function removeUserFromGroup(groupId, userId) {
+    return db.sequelize?.query("DELETE FROM `groupUser` WHERE groupId = :groupId AND userId = :userId",
+        {
+            replacements: {
+                groupId: groupId,
+                userId: userId
+            }
+        });
+}
+
