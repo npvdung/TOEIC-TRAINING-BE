@@ -1,9 +1,8 @@
-
 const config = require("../config.json");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../_helpers/db");
-const {QueryTypes} = require("sequelize");
+const { QueryTypes } = require("sequelize");
 const fs = require("fs");
 module.exports = {
   authenticate,
@@ -16,7 +15,7 @@ module.exports = {
   getUserWithHash,
   updateRoleAndIsActivated,
   getAllByUserId: getAllByUserId,
-  updateAvatar: updateAvatar
+  updateAvatar: updateAvatar,
 };
 
 async function authenticate({ username, password }) {
@@ -132,24 +131,26 @@ async function updateRoleAndIsActivated(body) {
 }
 
 async function getAllByUserId(userId) {
-  return db.sequelize?.query("SELECT g.* FROM `groupUser` gu LEFT JOIN `groups` g ON gu.groupId = g.id WHERE gu.userId = :userId",
-      {
-        replacements: {
-          userId: userId
-        },
-        type: QueryTypes.SELECT
-      });
+  return db.sequelize?.query(
+    "SELECT g.* FROM `groupuser` gu LEFT JOIN `groups` g ON gu.groupId = g.id WHERE gu.userId = :userId",
+    {
+      replacements: {
+        userId: userId,
+      },
+      type: QueryTypes.SELECT,
+    }
+  );
 }
 
 async function updateAvatar(avatarPath, userId) {
   db.User.update(
-      {
-        avatar: avatarPath
+    {
+      avatar: avatarPath,
+    },
+    {
+      where: {
+        id: userId,
       },
-      {
-        where: {
-          id: userId,
-        },
-      }
+    }
   );
 }
