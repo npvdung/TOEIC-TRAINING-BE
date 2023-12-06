@@ -132,7 +132,7 @@ async function updateRoleAndIsActivated(body) {
 
 async function getAllByUserId(userId) {
   return db.sequelize?.query(
-    "SELECT g.* FROM `groupuser` gu LEFT JOIN `groups` g ON gu.groupId = g.id WHERE gu.userId = :userId",
+    "SELECT g.* FROM `groupUser` gu LEFT JOIN `groups` g ON gu.groupId = g.id WHERE gu.userId = :userId",
     {
       replacements: {
         userId: userId,

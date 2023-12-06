@@ -37,7 +37,7 @@ function generateCode(length) {
 
 async function join(params) {
   return await db.sequelize.query(
-    "INSERT INTO `groupuser` (groupId, userId) VALUES (:groupId, :userId)",
+    "INSERT INTO `groupUser` (groupId, userId) VALUES (:groupId, :userId)",
     {
       replacements: {
         groupId: params.groupId,
@@ -55,7 +55,7 @@ async function findByCode(code) {
 async function existsInGroup(groupId, userId) {
   return db.sequelize
     ?.query(
-      "SELECT 1 FROM `groupuser` WHERE groupId = :groupId AND userId = :userId",
+      "SELECT 1 FROM `groupUser` WHERE groupId = :groupId AND userId = :userId",
       {
         replacements: {
           groupId: groupId,
@@ -69,7 +69,7 @@ async function existsInGroup(groupId, userId) {
 
 async function getAllUserByGroupId(groupId) {
   return db.sequelize?.query(
-    "SELECT u.* FROM groupuser gu JOIN users u ON gu.userId = u.id  WHERE gu.groupId = :groupId",
+    "SELECT u.* FROM groupUser gu JOIN users u ON gu.userId = u.id  WHERE gu.groupId = :groupId",
     {
       replacements: {
         groupId: groupId,
@@ -81,7 +81,7 @@ async function getAllUserByGroupId(groupId) {
 
 async function deleteGroup(groupId) {
   return db.sequelize?.query(
-    "DELETE FROM `groups` WHERE id = :groupId; DELETE FROM `groupuser` WHERE groupId = :groupId",
+    "DELETE FROM `groups` WHERE id = :groupId; DELETE FROM `groupUser` WHERE groupId = :groupId",
     {
       replacements: {
         groupId: groupId,
@@ -92,7 +92,7 @@ async function deleteGroup(groupId) {
 
 async function removeUserFromGroup(groupId, userId) {
   return db.sequelize?.query(
-    "DELETE FROM `groupuser` WHERE groupId = :groupId AND userId = :userId",
+    "DELETE FROM `groupUser` WHERE groupId = :groupId AND userId = :userId",
     {
       replacements: {
         groupId: groupId,
